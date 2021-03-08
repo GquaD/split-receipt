@@ -75,6 +75,7 @@ public class CalculationsService {
             Double debtorsAmountsSum = debtors.stream().mapToDouble(DebtorDto::getAmount).sum();
             for (DebtorDto debtor : debtors) {
                 Double debtToGivenUser = (givenUserDifferenceFromMean / debtorsAmountsSum) * debtor.getAmount();
+                debtToGivenUser = BigDecimal.valueOf(debtToGivenUser).setScale(4, RoundingMode.HALF_UP).doubleValue();
                 debtor.setAmount(debtToGivenUser);
             }
         }
