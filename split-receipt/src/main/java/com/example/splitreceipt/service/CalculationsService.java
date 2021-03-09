@@ -100,7 +100,7 @@ public class CalculationsService {
         return debtors;
     }
 
-    private Map<Integer, Double> calculateOverallAmountPerUser(List<Input> inputs) {
+    public Map<Integer, Double> calculateOverallAmountPerUser(List<Input> inputs) {
         Map<Integer, Double> amountsOverallMap = new HashMap<>();
         for (Input input : inputs) {
             Integer tempUserId = input.getUser().getId();
