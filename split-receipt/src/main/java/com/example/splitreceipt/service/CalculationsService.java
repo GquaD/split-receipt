@@ -63,6 +63,8 @@ public class CalculationsService {
 
         Double givenUserDifferenceFromMean = givenUserOverallAmount - mean;
 
+        if (givenUserDifferenceFromMean <= 0 ) return new ArrayList<>();
+
         List<DebtorDto> debtors = findDifferences(amountsOverallMap, users, mean);
 
         debtors = findDebtsOfAllUsersToGivenUser(debtors, givenUserDifferenceFromMean);
