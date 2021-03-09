@@ -17,16 +17,12 @@ public class Receipt {
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
-
     public Receipt(Integer receiptId) {
         this.id = receiptId;
     }
 
     public Receipt(ReceiptCreateDto receiptCreateDto) {
         this.comment = receiptCreateDto.getComment();
-        this.isActive = true;
     }
 
     public Receipt(){}
@@ -47,11 +43,4 @@ public class Receipt {
         this.comment = comment;
     }
 
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
 }

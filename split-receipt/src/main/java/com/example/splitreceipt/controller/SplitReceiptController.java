@@ -109,4 +109,21 @@ public class SplitReceiptController {
         }
         return ResponseEntity.ok(debtors);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOverallAmountOfReceipt(
+            @PathVariable("id") Integer receiptId
+    ) {
+        ReceiptResponseDto result;
+        try {
+            result = receiptService.getReceiptWithOverallAmount(receiptId);
+        } catch (ValidationException e) {
+            logger.error("Error : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResultDto(HttpStatus.BAD_REQUEST.toString(), e.getMessage()));
+        } catch (ResourceNotFoundException e) {
+            logger.error("Error : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResultDto(HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage()));
+        }
+        return ResponseEntity.ok(result);
+    }
 }

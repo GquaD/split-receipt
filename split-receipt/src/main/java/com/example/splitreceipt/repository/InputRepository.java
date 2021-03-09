@@ -13,4 +13,5 @@ import java.util.List;
 @Repository
 public interface InputRepository extends JpaRepository<Input, Integer> {
     List<Input> findAllByReceipt(Receipt receipt);
+    List<Input> findAllByReceiptId(Integer id);
 }
