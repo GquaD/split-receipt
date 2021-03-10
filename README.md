@@ -1,5 +1,6 @@
 # split-receipt
 App for splitting receipt
+version Java 8
 
 Made data initialization so that initial data is created for you to test. Class - DataInitializer
 
