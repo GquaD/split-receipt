@@ -90,6 +90,20 @@ public class CalculationsService {
         List<DebtorDto> debtors = new ArrayList<>();
         for (Integer key: amountsOverallMap.keySet()) {
             Double difference = mean - amountsOverallMap.get(key);
+            if (difference > 0) {
+                DebtorDto debtorDto = new DebtorDto();
+                debtorDto.setAmount(difference);
+                debtorDto.setName(users.stream().filter(i -> i.getId().equals(key)).findFirst().get().getName());
+                debtors.add(debtorDto);
+            }
+        }
+        return debtors;
+    }
+
+    private List<DebtorDto> findDifferencesForMyDebts(Map<Integer, Double> amountsOverallMap, List<User> users, Double mean) {
+        List<DebtorDto> debtors = new ArrayList<>();
+        for (Integer key: amountsOverallMap.keySet()) {
+            Double difference = mean - amountsOverallMap.get(key);
             if (difference <= 0) {
                 DebtorDto debtorDto = new DebtorDto();
                 debtorDto.setAmount(difference);
@@ -163,7 +177,7 @@ public class CalculationsService {
 
         if (givenUserDifferenceFromMean <= 0 ) return new ArrayList<>();
 
-        List<DebtorDto> debtors = findDifferences(amountsOverallMap, users, mean);
+        List<DebtorDto> debtors = findDifferencesForMyDebts(amountsOverallMap, users, mean);
 
         debtors = findDebtsOfAllUsersToGivenUser(debtors, givenUserDifferenceFromMean);
 
