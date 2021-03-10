@@ -90,7 +90,7 @@ public class CalculationsService {
         List<DebtorDto> debtors = new ArrayList<>();
         for (Integer key: amountsOverallMap.keySet()) {
             Double difference = mean - amountsOverallMap.get(key);
-            if (difference > 0) {
+            if (difference <= 0) {
                 DebtorDto debtorDto = new DebtorDto();
                 debtorDto.setAmount(difference);
                 debtorDto.setName(users.stream().filter(i -> i.getId().equals(key)).findFirst().get().getName());
@@ -138,4 +138,35 @@ public class CalculationsService {
         return true;
     }
 
+    public List<DebtorDto> calculateMyDebts(InputCreateDto inputCreateDto) {
+        if (!isValid(inputCreateDto)) throw new ValidationException("Input is incorrect");
+
+        Receipt receipt = receiptRepository.findById(inputCreateDto.getReceiptId()).get();
+        List<Input> inputs = inputRepository.findAllByReceipt(receipt);
+
+        //sum of all amounts for the receipt
+        Double sum = calculateSumForReceipt(inputs);
+
+        List<User> users = retrieveUsers(inputs);
+
+        Double mean = calculateMean(sum, users.size());
+
+        //removing current user from the list of all users who contributed to the receipt
+        users = users.stream().filter(u -> !u.getId().equals(inputCreateDto.getUserId())).collect(Collectors.toList());
+
+        Map<Integer, Double> amountsOverallMap = calculateOverallAmountPerUser(inputs);
+
+        Double givenUserOverallAmount = amountsOverallMap.get(inputCreateDto.getUserId());
+        amountsOverallMap.remove(inputCreateDto.getUserId());
+
+        Double givenUserDifferenceFromMean = mean - givenUserOverallAmount;
+
+        if (givenUserDifferenceFromMean <= 0 ) return new ArrayList<>();
+
+        List<DebtorDto> debtors = findDifferences(amountsOverallMap, users, mean);
+
+        debtors = findDebtsOfAllUsersToGivenUser(debtors, givenUserDifferenceFromMean);
+
+        return debtors;
+    }
 }
